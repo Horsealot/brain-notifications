@@ -1,11 +1,11 @@
 var amqp = require('amqplib/callback_api');
 
-const rabbitmqConfig = require('./config/rabbitmq');
+const config = require('config');
 const authController = require('./controllers/auth.ctrl');
 
-amqp.connect(rabbitmqConfig.host, function(err, conn) {
+amqp.connect(config.get('rabbitmq.host'), function(err, conn) {
     conn.createChannel(function(err, ch) {
-        var q = rabbitmqConfig.queue;
+        var q = config.get('rabbitmq.queue_prefix') + "notifications";
 
         ch.assertQueue(q, {durable: true});
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
